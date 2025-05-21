@@ -65,6 +65,9 @@ def init_sounds():
     # ゲームオーバー音：不穏で長め
     pyxel.sound(2).set("c3g2c2", "nnn", "654", "n", 20)
 
+    # ゲームクリア音：明るく上昇する音
+    pyxel.sound(3).set("c3e3g3c4", "nnnn", "4444", "n", 20)
+
 # ----------------------------
 # ゲーム更新（プレイ中）
 # ----------------------------
@@ -143,6 +146,7 @@ def update_game():
     # 敵全滅 → クリア
     all_dead = all(not alive for row in enemies for alive in row)
     if all_dead:
+        pyxel.play(0, 3)  # チャンネル0でゲームクリア音
         game_state = "gameclear"
 
 # ----------------------------
