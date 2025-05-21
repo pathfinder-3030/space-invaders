@@ -62,6 +62,9 @@ def init_sounds():
     # 敵が倒れる音：低くて重め
     pyxel.sound(1).set("f2", "n", "7", "n", 10)
 
+    # ゲームオーバー音：不穏で長め
+    pyxel.sound(2).set("c3g2c2", "nnn", "654", "n", 20)
+
 # ----------------------------
 # ゲーム更新（プレイ中）
 # ----------------------------
@@ -133,6 +136,7 @@ def update_game():
             if enemies[row][col]:
                 _, y = enemy_positions[row][col]
                 if y + ENEMY_SIZE >= playerY:
+                    pyxel.play(0, 2)  # チャンネル0でゲームオーバー音
                     game_state = "gameover"
                     return
 
