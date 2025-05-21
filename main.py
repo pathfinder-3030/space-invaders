@@ -30,9 +30,9 @@ playerY = SCREEN_HEIGHT - PLAYER_HEIGHT - 5
 bullet = None
 enemy_dx = ENEMY_SPEED
 enemy_move_timer = 0
-game_state = "title"  # "title" / "playing" / "gameover"
+game_state = "title"  # title / playing / gameover / gameclear
 
-# 敵状態初期化
+# 敵初期化
 def init_enemies():
     global enemies, enemy_positions
     enemies = [[True for _ in range(ENEMY_COLS)] for _ in range(ENEMY_ROWS)]
@@ -49,7 +49,6 @@ def init_enemies():
 
 init_enemies()
 
-# ゲーム本体更新
 def update_game():
     global playerX, bullet, enemy_dx, enemy_move_timer, game_state
 
@@ -64,7 +63,7 @@ def update_game():
     if pyxel.btnp(pyxel.KEY_SPACE) and bullet is None:
         bullet = [playerX + PLAYER_WIDTH // 2, playerY]
 
-    # 弾の移動と当たり判定
+    # 弾の移動・当たり判定
     if bullet is not None:
         bullet[1] -= BULLET_SPEED
         if bullet[1] + BULLET_HEIGHT < 0:
@@ -111,18 +110,21 @@ def update_game():
                 if enemies[row][col]:
                     enemy_positions[row][col][0] += enemy_dx
 
-    # 敵が下まで来たらゲームオーバー
+    # 敵が下に来たらゲームオーバー
     for row in range(ENEMY_ROWS):
         for col in range(ENEMY_COLS):
             if enemies[row][col]:
                 _, y = enemy_positions[row][col]
                 if y + ENEMY_SIZE >= playerY:
                     game_state = "gameover"
-                    break
-        if game_state == "gameover":
-            break
+                    return
 
-# ゲーム初期化
+    # 敵全滅チェック
+    all_dead = all(not alive for row in enemies for alive in row)
+    if all_dead:
+        game_state = "gameclear"
+
+# 初期化
 def reset_game():
     global playerX, bullet, enemy_dx, enemy_move_timer
     playerX = SCREEN_WIDTH // 2 - PLAYER_WIDTH // 2
@@ -131,7 +133,7 @@ def reset_game():
     enemy_move_timer = 0
     init_enemies()
 
-# 共通描画
+# 描画関連
 def drawPlayer():
     pyxel.rect(playerX, playerY, PLAYER_WIDTH, PLAYER_HEIGHT, 11)
 
@@ -146,36 +148,35 @@ def drawBullet():
     if bullet is not None:
         pyxel.rect(bullet[0], bullet[1], BULLET_WIDTH, BULLET_HEIGHT, 7)
 
-# メイン update 関数
+# メイン update
 def update():
     global game_state
-
     if game_state == "title":
         if pyxel.btnp(pyxel.KEY_SPACE):
             reset_game()
             game_state = "playing"
     elif game_state == "playing":
         update_game()
-    elif game_state == "gameover":
+    elif game_state in ["gameover", "gameclear"]:
         if pyxel.btnp(pyxel.KEY_SPACE):
             game_state = "title"
 
-# メイン draw 関数
+# メイン draw
 def draw():
     pyxel.cls(0)
-
     if game_state == "title":
         pyxel.text(45, 50, "INVADER GAME", 9)
         pyxel.text(30, 70, "PRESS SPACE TO START", 7)
-
     elif game_state == "playing":
         drawEnemies()
         drawPlayer()
         drawBullet()
-
     elif game_state == "gameover":
-        pyxel.text(SCREEN_WIDTH // 2 - 20, SCREEN_HEIGHT // 2 - 4, "GAME OVER", pyxel.frame_count % 16)
-        pyxel.text(SCREEN_WIDTH // 2 - 40, SCREEN_HEIGHT // 2 + 6, "PRESS SPACE TO RESTART", 7)
+        pyxel.text(60, 50, "GAME OVER", pyxel.frame_count % 16)
+        pyxel.text(30, 70, "PRESS SPACE TO TITLE", 7)
+    elif game_state == "gameclear":
+        pyxel.text(60, 50, "YOU WIN!", pyxel.frame_count % 16)
+        pyxel.text(30, 70, "PRESS SPACE TO TITLE", 7)
 
 pyxel.init(SCREEN_WIDTH, SCREEN_HEIGHT, title="インベーダーゲーム")
 pyxel.run(update, draw)
