@@ -7,7 +7,7 @@ SCREEN_WIDTH = 160
 SCREEN_HEIGHT = 120
 
 PLAYER_WIDTH = 16
-PLAYER_HEIGHT = 8
+PLAYER_HEIGHT = 16
 
 ENEMY_SIZE = 8
 ENEMY_COLS = 10
@@ -56,16 +56,9 @@ init_enemies()
 # 効果音初期化
 # ----------------------------
 def init_sounds():
-    # 弾の発射音：短く高め
     pyxel.sound(0).set("c3", "p", "6", "n", 10)
-
-    # 敵が倒れる音：低くて重め
     pyxel.sound(1).set("f2", "n", "7", "n", 10)
-
-    # ゲームオーバー音：不穏で長め
     pyxel.sound(2).set("c3g2c2", "nnn", "654", "n", 20)
-
-    # ゲームクリア音：明るく上昇する音
     pyxel.sound(3).set("c3e3g3c4", "nnnn", "4444", "n", 20)
 
 # ----------------------------
@@ -80,12 +73,10 @@ def update_game():
     if pyxel.btn(pyxel.KEY_RIGHT):
         playerX = min(SCREEN_WIDTH - PLAYER_WIDTH, playerX + speed)
 
-    # 弾の発射
     if pyxel.btnp(pyxel.KEY_SPACE) and bullet is None:
         bullet = [playerX + PLAYER_WIDTH // 2, playerY]
-        pyxel.play(0, 0)  # チャンネル0で発射音
+        pyxel.play(0, 0)
 
-    # 弾の移動・当たり判定
     if bullet is not None:
         bullet[1] -= BULLET_SPEED
         if bullet[1] + BULLET_HEIGHT < 0:
@@ -103,12 +94,11 @@ def update_game():
                         ):
                             enemies[row][col] = False
                             bullet = None
-                            pyxel.play(1, 1)  # チャンネル1で命中音
+                            pyxel.play(1, 1)
                             break
                 if bullet is None:
                     break
 
-    # 敵の移動
     enemy_move_timer += 1
     if enemy_move_timer >= ENEMY_MOVE_INTERVAL:
         enemy_move_timer = 0
@@ -133,24 +123,22 @@ def update_game():
                 if enemies[row][col]:
                     enemy_positions[row][col][0] += enemy_dx
 
-    # 敵が下に来たらゲームオーバー
     for row in range(ENEMY_ROWS):
         for col in range(ENEMY_COLS):
             if enemies[row][col]:
                 _, y = enemy_positions[row][col]
                 if y + ENEMY_SIZE >= playerY:
-                    pyxel.play(0, 2)  # チャンネル0でゲームオーバー音
+                    pyxel.play(0, 2)
                     game_state = "gameover"
                     return
 
-    # 敵全滅 → クリア
     all_dead = all(not alive for row in enemies for alive in row)
     if all_dead:
-        pyxel.play(0, 3)  # チャンネル0でゲームクリア音
+        pyxel.play(0, 3)
         game_state = "gameclear"
 
 # ----------------------------
-# ゲーム初期化（再スタート時）
+# ゲーム初期化
 # ----------------------------
 def reset_game():
     global playerX, bullet, enemy_dx, enemy_move_timer
@@ -161,10 +149,11 @@ def reset_game():
     init_enemies()
 
 # ----------------------------
-# 描画系
+# 描画
 # ----------------------------
 def drawPlayer():
-    pyxel.rect(playerX, playerY, PLAYER_WIDTH, PLAYER_HEIGHT, 11)
+    # pyxel.blt(x, y, img, u, v, w, h, colkey)
+    pyxel.blt(playerX, playerY, 0, 0, 0, 16, 16, 0)
 
 def drawEnemies():
     for row in range(ENEMY_ROWS):
@@ -215,5 +204,6 @@ def draw():
 # 起動
 # ----------------------------
 pyxel.init(SCREEN_WIDTH, SCREEN_HEIGHT, title="インベーダーゲーム")
+pyxel.load("invader_game.pyxres") 
 init_sounds()
 pyxel.run(update, draw)
