@@ -23,7 +23,7 @@ class Player:
         self.bullet = None
         self.direction = "neutral"  # "left", "right", "neutral"
 
-    def update(self):
+    def player_update(self):
         speed = 2
         self.direction = "neutral"  # 毎フレーム初期化
 
@@ -44,7 +44,7 @@ class Player:
             if self.bullet[1] + BULLET_HEIGHT < 0:
                 self.bullet = None
 
-    def draw(self):
+    def player_draw(self):
         if self.direction == "right":
             pyxel.blt(self.x, self.y, 0, 0, 16, PLAYER_WIDTH, PLAYER_HEIGHT, 0)
 
@@ -67,11 +67,11 @@ def init_sounds():
 # ゲーム全体の初期化
 # ----------------------------
 def update():
-    player.update()
+    player.player_update()
 
 def draw():
     pyxel.cls(0)
-    player.draw()
+    player.player_draw()
 
 # ----------------------------
 # 起動処理
