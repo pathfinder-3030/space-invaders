@@ -46,10 +46,10 @@ class Player:
 
     def draw(self):
         if self.direction == "right":
-            pyxel.blt(self.x, self.y, 0, 0, 16, 16, 16, 0)
+            pyxel.blt(self.x, self.y, 0, 0, 16, PLAYER_WIDTH, PLAYER_HEIGHT, 0)
 
         if self.direction == "left":
-            pyxel.blt(self.x, self.y, 0, 0, 32, 16, 16, 0)
+            pyxel.blt(self.x, self.y, 0, 0, 32, PLAYER_WIDTH, PLAYER_HEIGHT, 0)
 
         if self.direction == "neutral":
             pyxel.blt(self.x, self.y, 0, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, 0)
