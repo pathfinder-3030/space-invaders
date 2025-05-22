@@ -1,24 +1,28 @@
 import pyxel
 
 # ----------------------------
-# ウィンドウサイズと各種設定
+# 各種設定
 # ----------------------------
+#ウィンドウ
 SCREEN_WIDTH = 160
 SCREEN_HEIGHT = 120
 
+# プレイヤー
 PLAYER_WIDTH = 16
 PLAYER_HEIGHT = 16
 
-ENEMY_SIZE = 8
-ENEMY_COLS = 10
-ENEMY_ROWS = 5
-ENEMY_SPACING = 2
-ENEMY_START_X = 10
-ENEMY_START_Y = 10
-ENEMY_SPEED = 1
-ENEMY_MOVE_INTERVAL = 1
-ENEMY_DESCEND_STEP = 4
+# インベーダー
+ENEMY_SIZE = 8 # 敵の大きさ
+ENEMY_COLS = 10 # 敵を横方向に何体配置するか
+ENEMY_ROWS = 5 # 敵の行数
+ENEMY_SPACING = 2 # 敵同士の隙間
+ENEMY_START_X = 10 # 敵の最初の左端のX座標
+ENEMY_START_Y = 10 # 敵の最初の上のY座標
+ENEMY_SPEED = 1 # 敵の横移動のスピード(x方向) 
+ENEMY_MOVE_INTERVAL = 1 # 敵を何フレームごとに敵を動かすか
+ENEMY_DESCEND_STEP = 4 # 敵が壁にぶつかって進行方向を反転するとき、Y座標を Xピクセル下げる
 
+# 弾
 BULLET_WIDTH = 1
 BULLET_HEIGHT = 4
 BULLET_SPEED = 4
@@ -26,18 +30,18 @@ BULLET_SPEED = 4
 # ----------------------------
 # グローバル変数
 # ----------------------------
-playerX = SCREEN_WIDTH // 2 - PLAYER_WIDTH // 2
-playerY = SCREEN_HEIGHT - PLAYER_HEIGHT - 5
-bullet = None
-enemy_dx = ENEMY_SPEED
-enemy_move_timer = 0
-game_state = "title"  # title / playing / gameover / gameclear
+playerX = SCREEN_WIDTH // 2 - PLAYER_WIDTH // 2 # プレイヤーの初期位置(X軸の中央位置)
+playerY = SCREEN_HEIGHT - PLAYER_HEIGHT - 5 # プレイヤーのy座標
+bullet = None # プレイヤーが発射した弾の状態 (ウィンドウの外や敵に当たるとNoneになる)
+enemy_dx = ENEMY_SPEED # 敵のスピード
+enemy_move_timer = 0 # 敵の移動タイミングを制御するためのカウンター
+game_state = "title" # ページの状態管理 # title / playing / gameover / gameclear
 
 # ----------------------------
 # 敵初期化
 # ----------------------------
 def init_enemies():
-    global enemies, enemy_positions
+    global enemies,enemy_positions
     enemies = [[True for _ in range(ENEMY_COLS)] for _ in range(ENEMY_ROWS)]
     enemy_positions = [
         [
