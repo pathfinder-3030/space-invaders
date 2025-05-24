@@ -22,7 +22,7 @@ def draw():
 # ----------------------------
 # 起動処理
 # ----------------------------
-pyxel.init(SCREEN_WIDTH, SCREEN_HEIGHT, title="Invader with Class")
+pyxel.init(SCREEN_WIDTH, SCREEN_HEIGHT, title="インベーダーゲーム")
 pyxel.load("invader_game.pyxres")
 init_sounds()
 player = Player(SCREEN_WIDTH // 2 - PLAYER_WIDTH // 2, SCREEN_HEIGHT - PLAYER_HEIGHT - 5)
