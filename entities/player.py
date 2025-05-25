@@ -1,12 +1,13 @@
 import pyxel
-from config import SCREEN_WIDTH, PLAYER_WIDTH, PLAYER_HEIGHT, BULLET_WIDTH, BULLET_HEIGHT, BULLET_SPEED
+from entities.bullet import Bullet  
+from config import SCREEN_WIDTH, PLAYER_WIDTH, BULLET_WIDTH, BULLET_HEIGHT, PLAYER_HEIGHT
 
 class Player:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.bullet = None
-        self.direction = "neutral"  # "left", "right", "neutral"
+        self.bullets = []  # 弾をリストで管理
+        self.direction = "neutral"
 
     def update(self):
         speed = 2
@@ -20,14 +21,17 @@ class Player:
             self.x = min(SCREEN_WIDTH - PLAYER_WIDTH, self.x + speed)
             self.direction = "right"
 
-        if pyxel.btnp(pyxel.KEY_SPACE) and self.bullet is None:
-            self.bullet = [self.x + PLAYER_WIDTH // 2, self.y]
+        if pyxel.btnp(pyxel.KEY_SPACE):
+            bullet_x = self.x + PLAYER_WIDTH // 2 - BULLET_WIDTH // 2
+            bullet_y = self.y
+            self.bullets.append(Bullet(bullet_x, bullet_y))
             pyxel.play(0, 0)
 
-        if self.bullet is not None:
-            self.bullet[1] -= BULLET_SPEED
-            if self.bullet[1] + BULLET_HEIGHT < 0:
-                self.bullet = None
+        # 弾の更新と削除
+        for bullet in self.bullets[:]:
+            bullet.update()
+            if bullet.y + BULLET_HEIGHT < 0:
+                self.bullets.remove(bullet)
 
     def draw(self):
         if self.direction == "right":
@@ -37,5 +41,6 @@ class Player:
         else:
             pyxel.blt(self.x, self.y, 0, 0, 0, PLAYER_WIDTH, PLAYER_HEIGHT, 0)
 
-        if self.bullet is not None:
-            pyxel.rect(self.bullet[0], self.bullet[1], BULLET_WIDTH, BULLET_HEIGHT, 7)
+        # 弾の描画
+        for bullet in self.bullets:
+            bullet.draw()

@@ -14,8 +14,16 @@ def init_sounds():
 # ----------------------------
 def update():
     player.update()
-    for enemy in basic_enemies:
+
+    # 敵の更新と弾との衝突チェック
+    for enemy in basic_enemies[:]:
         enemy.update()
+
+        for bullet in player.bullets[:]:
+            if enemy.is_hit_by(bullet):  # 衝突判定
+                basic_enemies.remove(enemy)
+                player.bullets.remove(bullet)
+                break  # 同じ弾で複数の敵に当たらないように
 
 # ----------------------------
 # ゲーム全体の描画
@@ -35,10 +43,10 @@ init_sounds()
 
 player = Player(SCREEN_WIDTH // 2 - PLAYER_WIDTH // 2, SCREEN_HEIGHT - PLAYER_HEIGHT - 5)
 
-# 複数の敵を横に並べて生成
+# 横一列に敵を生成
 basic_enemies = []
 for i in range(5):
-    x = i * 16
+    x = i * 16  # 敵同士の間隔（必要に応じて調整）
     y = 0
     basic_enemies.append(BasicEnemy(x, y))
 

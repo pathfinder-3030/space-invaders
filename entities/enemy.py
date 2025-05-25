@@ -3,7 +3,7 @@ from config import SCREEN_WIDTH
 
 # スプライト情報（必要に応じて config.py に移してもOK）
 ENEMY_WIDTH = 14
-ENEMY_HEIGHT = 16
+ENEMY_HEIGHT = 11
 SPRITE_ENEMY_U = 33
 SPRITE_ENEMY_V = 3
 ENEMY_SPEED = 0.5
@@ -33,3 +33,11 @@ class BasicEnemy:
             h=ENEMY_HEIGHT,
             colkey=0
         )
+
+    def is_hit_by(self, bullet):
+        return (
+        self.x < bullet.x + bullet.w and
+        self.x + ENEMY_WIDTH > bullet.x and
+        self.y < bullet.y + bullet.h and
+        self.y + ENEMY_HEIGHT > bullet.y
+    )
