@@ -1,7 +1,6 @@
 import pyxel
 from entities.player import Player
-from entities.enemy import BasicEnemy  
-
+from entities.enemy import BasicEnemy
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT
 
 # ----------------------------
@@ -15,7 +14,8 @@ def init_sounds():
 # ----------------------------
 def update():
     player.update()
-    enemy.update()  
+    for enemy in basic_enemies:
+        enemy.update()
 
 # ----------------------------
 # ゲーム全体の描画
@@ -23,7 +23,8 @@ def update():
 def draw():
     pyxel.cls(0)
     player.draw()
-    enemy.draw()  
+    for enemy in basic_enemies:
+        enemy.draw()
 
 # ----------------------------
 # 起動処理
@@ -33,6 +34,12 @@ pyxel.load("invader_game.pyxres")
 init_sounds()
 
 player = Player(SCREEN_WIDTH // 2 - PLAYER_WIDTH // 2, SCREEN_HEIGHT - PLAYER_HEIGHT - 5)
-enemy = BasicEnemy(40, 20)  
+
+# 複数の敵を横に並べて生成
+basic_enemies = []
+for i in range(5):
+    x = i * 16
+    y = 0
+    basic_enemies.append(BasicEnemy(x, y))
 
 pyxel.run(update, draw)
