@@ -45,8 +45,8 @@ player = Player(SCREEN_WIDTH // 2 - PLAYER_WIDTH // 2, SCREEN_HEIGHT - PLAYER_HE
 
 # 横一列に敵を生成
 basic_enemies = []
-for i in range(5):
-    x = i * 16  # 敵同士の間隔（必要に応じて調整）
+for i in range(10):
+    x = i * 20
     y = 0
     basic_enemies.append(BasicEnemy(x, y))
 
