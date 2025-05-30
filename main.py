@@ -7,6 +7,13 @@ from entities.boss_enemy import BossEnemy
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT
 
 # ----------------------------
+# ゲーム状態の定義
+# ----------------------------
+STATE_MENU = 0
+STATE_PLAY = 1
+game_state = STATE_MENU
+
+# ----------------------------
 # 星の初期化（50個、ランダムサイズ＆速度）
 # ----------------------------
 stars = []
@@ -17,7 +24,7 @@ for _ in range(NUM_STARS):
         "x": random.randint(0, SCREEN_WIDTH - 1),
         "y": random.randint(0, SCREEN_HEIGHT - 1),
         "speed": random.choice([0.3, 0.5, 1]),
-        "size": random.choice([1, 2])  # サイズ: 1px または 2px角
+        "size": random.choice([1, 2])
     })
 
 # ----------------------------
@@ -30,7 +37,13 @@ def init_sounds():
 # ゲーム全体の更新
 # ----------------------------
 def update():
-    # 星の位置更新
+    global game_state
+
+    if game_state == STATE_MENU:
+        if pyxel.btnp(pyxel.KEY_SPACE):
+            game_state = STATE_PLAY
+        return
+
     for star in stars:
         star["y"] += star["speed"]
         if star["y"] >= SCREEN_HEIGHT:
@@ -68,15 +81,32 @@ def update():
 def draw():
     pyxel.cls(0)
 
-    # 星をサイズに応じて描画
+    # 背景の星は常に描画
     for star in stars:
         x = int(star["x"])
         y = int(star["y"])
         if star["size"] == 1:
-            pyxel.pset(x, y, 7)  # 小さな白点
+            pyxel.pset(x, y, 7)
         else:
-            pyxel.rect(x, y, 2, 2, 7)  # 大きめの白点（正方形）
+            pyxel.rect(x, y, 2, 2, 7)
 
+    if game_state == STATE_MENU:
+        title = "INVADER GAME"
+        prompt = "PRESS SPACE TO START"
+
+        title_x = (SCREEN_WIDTH - len(title) * 4) // 2
+        title_y = SCREEN_HEIGHT // 2 - 10
+
+        prompt_x = (SCREEN_WIDTH - len(prompt) * 4) // 2
+        prompt_y = SCREEN_HEIGHT // 2 + 10
+
+        pyxel.text(title_x, title_y, title, 7)
+
+        if (pyxel.frame_count // 30) % 2 == 0:
+            pyxel.text(prompt_x, prompt_y, prompt, 6)
+        return
+
+    # プレイ中の描画
     player.draw()
 
     for enemy in basic_enemies:
