@@ -4,7 +4,7 @@ from config import SCREEN_WIDTH
 ENEMY_WIDTH = 12
 ENEMY_HEIGHT = 11
 ENEMY_SPEED = 0.2
-DESCENT_AMOUNT = 11
+DESCENT_AMOUNT = 30
 
 class StrongEnemy:
     def __init__(self, x, y):

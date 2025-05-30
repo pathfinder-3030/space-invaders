@@ -7,7 +7,7 @@ ENEMY_HEIGHT = 11
 SPRITE_ENEMY_U = 34
 SPRITE_ENEMY_V = 3
 ENEMY_SPEED = 0.2
-DESCENT_AMOUNT = 15 # 端に当たったときにy方向に進む量
+DESCENT_AMOUNT = 30
 
 class BasicEnemy:
     def __init__(self, x, y):
