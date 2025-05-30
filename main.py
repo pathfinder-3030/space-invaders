@@ -2,6 +2,7 @@ import pyxel
 from entities.player import Player
 from entities.basic_enemy import BasicEnemy
 from entities.strong_enemy import StrongEnemy
+from entities.boss_enemy import BossEnemy
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT
 
 # ----------------------------
@@ -34,6 +35,15 @@ def update():
                 player.bullets.remove(bullet)
                 break
 
+    # 強敵の更新と衝突処理
+    for enemy in boss_enemies[:]:
+        enemy.update()
+        for bullet in player.bullets[:]:
+            if enemy.is_hit_by(bullet):
+                boss_enemies.remove(enemy)
+                player.bullets.remove(bullet)
+                
+
 # ----------------------------
 # ゲーム全体の描画
 # ----------------------------
@@ -47,6 +57,8 @@ def draw():
     for enemy in strong_enemies:
         enemy.draw()
 
+    for enemy in boss_enemies:
+        enemy.draw()
 # ----------------------------
 # 起動処理
 # ----------------------------
@@ -60,16 +72,21 @@ player = Player(SCREEN_WIDTH // 2 - PLAYER_WIDTH // 2, SCREEN_HEIGHT - PLAYER_HE
 
 basic_enemies = []
 strong_enemies = []
+boss_enemies = []
 
 for i in range(10):
-    x = i * 50
+    x = i * 20
     y = 0
+    boss_enemies.append(BossEnemy(x, y))
+
+for i in range(10):
+    x = i * 20
+    y = 20
     strong_enemies.append(StrongEnemy(x, y))
 
-# 下段：BasicEnemy（通常敵）
 for i in range(10):
-    x = i * 50
-    y = 20
+    x = i * 20
+    y = 40
     basic_enemies.append(BasicEnemy(x, y))
 
 # ゲーム開始

@@ -2,12 +2,12 @@ import pyxel
 from config import SCREEN_WIDTH
 
 # スプライト情報（必要に応じて config.py に移してもOK）
-ENEMY_WIDTH = 14
+ENEMY_WIDTH = 12
 ENEMY_HEIGHT = 11
-SPRITE_ENEMY_U = 33
+SPRITE_ENEMY_U = 34
 SPRITE_ENEMY_V = 3
-ENEMY_SPEED = 0.5
-DESCENT_AMOUNT = 11 # 端に当たったときにy方向に進む量
+ENEMY_SPEED = 0.2
+DESCENT_AMOUNT = 15 # 端に当たったときにy方向に進む量
 
 class BasicEnemy:
     def __init__(self, x, y):
