@@ -3,7 +3,7 @@ from config import SCREEN_WIDTH
 
 ENEMY_WIDTH = 12
 ENEMY_HEIGHT = 11
-ENEMY_SPEED = 0.2
+ENEMY_SPEED = 0.5
 DESCENT_AMOUNT = 30
 
 class BossEnemy:
