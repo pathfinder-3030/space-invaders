@@ -12,6 +12,7 @@ from config import SCREEN_WIDTH, SCREEN_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT
 STATE_MENU = 0
 STATE_PLAY = 1
 STATE_CLEAR = 2
+STATE_GAME_OVER = 3
 game_state = STATE_MENU
 
 # ----------------------------
@@ -87,7 +88,7 @@ def update():
             game_state = STATE_PLAY
         return
 
-    if game_state == STATE_CLEAR:
+    if game_state == STATE_CLEAR or game_state == STATE_GAME_OVER:
         if pyxel.btnp(pyxel.KEY_R):
             reset_game()
         return
@@ -100,6 +101,7 @@ def update():
 
     player.update()
 
+    # BasicEnemy の更新とプレイヤーへの弾チェック
     for enemy in basic_enemies[:]:
         enemy.update()
         for bullet in player.bullets[:]:
@@ -107,7 +109,12 @@ def update():
                 basic_enemies.remove(enemy)
                 player.bullets.remove(bullet)
                 break
+        for enemy_bullet in enemy.bullets[:]:
+            if player.is_hit_by(enemy_bullet):
+                game_state = STATE_GAME_OVER
+                return
 
+    # StrongEnemy の更新
     for enemy in strong_enemies[:]:
         enemy.update()
         for bullet in player.bullets[:]:
@@ -116,6 +123,7 @@ def update():
                 player.bullets.remove(bullet)
                 break
 
+    # BossEnemy の更新
     for enemy in boss_enemies[:]:
         enemy.update()
         for bullet in player.bullets[:]:
@@ -164,6 +172,18 @@ def draw():
         restart_x = (SCREEN_WIDTH - len(restart_text) * 4) // 2
 
         pyxel.text(clear_x, SCREEN_HEIGHT // 2 - 10, clear_text, 10)
+        if (pyxel.frame_count // 30) % 2 == 0:
+            pyxel.text(restart_x, SCREEN_HEIGHT // 2 + 10, restart_text, 7)
+        return
+
+    elif game_state == STATE_GAME_OVER:
+        over_text = "GAME OVER"
+        restart_text = "PRESS R TO RETRY"
+
+        over_x = (SCREEN_WIDTH - len(over_text) * 4) // 2
+        restart_x = (SCREEN_WIDTH - len(restart_text) * 4) // 2
+
+        pyxel.text(over_x, SCREEN_HEIGHT // 2 - 10, over_text, 8)
         if (pyxel.frame_count // 30) % 2 == 0:
             pyxel.text(restart_x, SCREEN_HEIGHT // 2 + 10, restart_text, 7)
         return

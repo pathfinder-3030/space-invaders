@@ -1,19 +1,19 @@
 import pyxel
-from config import SCREEN_WIDTH
+import random
+from entities.bullet import Bullet
+from config import SCREEN_WIDTH, ENEMY_WIDTH, ENEMY_HEIGHT, BULLET_WIDTH, BULLET_HEIGHT
 
-# スプライト情報（必要に応じて config.py に移してもOK）
-ENEMY_WIDTH = 12
-ENEMY_HEIGHT = 11
-SPRITE_ENEMY_U = 34
-SPRITE_ENEMY_V = 3
 ENEMY_SPEED = 0.5
 DESCENT_AMOUNT = 30
+ENEMY_SHOT_INTERVAL = 90  # 約3秒に1発（30FPSの場合）
 
 class BasicEnemy:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.dx = ENEMY_SPEED  # x方向の速度
+        self.dx = ENEMY_SPEED
+        self.bullets = []
+        self.last_shot_frame = pyxel.frame_count + random.randint(0, 60)  # ランダムにずらす
 
     def update(self):
         self.x += self.dx
@@ -23,21 +23,29 @@ class BasicEnemy:
             self.dx *= -1
             self.y += DESCENT_AMOUNT
 
+        # 弾の発射
+        if pyxel.frame_count - self.last_shot_frame >= ENEMY_SHOT_INTERVAL:
+            bullet_x = self.x + ENEMY_WIDTH // 2 - BULLET_WIDTH // 2
+            bullet_y = self.y + ENEMY_HEIGHT
+            self.bullets.append(Bullet(bullet_x, bullet_y, dy=2))  # 下方向に進む
+            self.last_shot_frame = pyxel.frame_count
+
+        # 弾の更新と削除
+        for bullet in self.bullets[:]:
+            bullet.update()
+            if bullet.y > pyxel.height:
+                self.bullets.remove(bullet)
+
     def draw(self):
-        pyxel.blt(
-            self.x, self.y,
-            img=0,
-            u=SPRITE_ENEMY_U, 
-            v=SPRITE_ENEMY_V,
-            w=ENEMY_WIDTH, 
-            h=ENEMY_HEIGHT,
-            colkey=0
-        )
+        pyxel.blt(self.x, self.y, 0, 34, 3, ENEMY_WIDTH, ENEMY_HEIGHT, 0)
+
+        for bullet in self.bullets:
+            bullet.draw()
 
     def is_hit_by(self, bullet):
         return (
-        self.x < bullet.x + bullet.w and
-        self.x + ENEMY_WIDTH > bullet.x and
-        self.y < bullet.y + bullet.h and
-        self.y + ENEMY_HEIGHT > bullet.y
-    )
+            self.x < bullet.x + bullet.w and
+            self.x + ENEMY_WIDTH > bullet.x and
+            self.y < bullet.y + bullet.h and
+            self.y + ENEMY_HEIGHT > bullet.y
+        )
