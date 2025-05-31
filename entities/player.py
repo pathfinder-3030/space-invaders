@@ -8,6 +8,7 @@ class Player:
         self.y = y
         self.bullets = []  # 弾をリストで管理
         self.direction = "neutral"
+        self.last_shot_frame = -30  # 最初から撃てるようにするための初期値
 
     def update(self):
         speed = 2
@@ -22,12 +23,15 @@ class Player:
             self.x = min(SCREEN_WIDTH - PLAYER_WIDTH, self.x + speed)
             self.direction = "right"
 
-        # 発射（弾がないときだけ）
-        if pyxel.btnp(pyxel.KEY_SPACE) and not self.bullets:
-            bullet_x = self.x + PLAYER_WIDTH // 2 - BULLET_WIDTH // 2
-            bullet_y = self.y
-            self.bullets.append(Bullet(bullet_x, bullet_y))
-            pyxel.play(0, 0)
+        # 弾の発射（毎秒1回制限）
+        if pyxel.btn(pyxel.KEY_SPACE):
+            current_frame = pyxel.frame_count
+            if current_frame - self.last_shot_frame >= 30:
+                bullet_x = self.x + PLAYER_WIDTH // 2 - BULLET_WIDTH // 2
+                bullet_y = self.y
+                self.bullets.append(Bullet(bullet_x, bullet_y))
+                pyxel.play(0, 0)
+                self.last_shot_frame = current_frame
 
         # 弾の更新と削除
         for bullet in self.bullets[:]:
