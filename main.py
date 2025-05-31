@@ -16,20 +16,6 @@ STATE_GAME_OVER = 3
 game_state = STATE_MENU
 
 # ----------------------------
-# 星の初期化（50個、ランダムサイズ＆速度）
-# ----------------------------
-stars = []
-NUM_STARS = 50
-
-for _ in range(NUM_STARS):
-    stars.append({
-        "x": random.randint(0, SCREEN_WIDTH - 1),
-        "y": random.randint(0, SCREEN_HEIGHT - 1),
-        "speed": random.choice([0.3, 0.5, 1]),
-        "size": random.choice([1, 2])
-    })
-
-# ----------------------------
 # 敵生成用設定
 # ----------------------------
 enemy_rows = [
@@ -93,12 +79,6 @@ def update():
             reset_game()
         return
 
-    for star in stars:
-        star["y"] += star["speed"]
-        if star["y"] >= SCREEN_HEIGHT:
-            star["y"] = 0
-            star["x"] = random.randint(0, SCREEN_WIDTH - 1)
-
     player.update()
 
     # BasicEnemy の更新とプレイヤーへの弾チェック
@@ -140,15 +120,6 @@ def update():
 # ----------------------------
 def draw():
     pyxel.cls(0)
-
-    # 背景の星は常に描画
-    for star in stars:
-        x = int(star["x"])
-        y = int(star["y"])
-        if star["size"] == 1:
-            pyxel.pset(x, y, 7)
-        else:
-            pyxel.rect(x, y, 2, 2, 7)
 
     if game_state == STATE_MENU:
         title = "INVADER GAME"

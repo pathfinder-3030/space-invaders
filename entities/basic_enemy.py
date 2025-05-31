@@ -27,7 +27,7 @@ class BasicEnemy:
         if pyxel.frame_count - self.last_shot_frame >= ENEMY_SHOT_INTERVAL:
             bullet_x = self.x + ENEMY_WIDTH // 2 - BULLET_WIDTH // 2
             bullet_y = self.y + ENEMY_HEIGHT
-            self.bullets.append(Bullet(bullet_x, bullet_y, dy=2))  # 下方向に進む
+            self.bullets.append(Bullet(bullet_x, bullet_y, dy=2, color=10))  # 赤い弾など
             self.last_shot_frame = pyxel.frame_count
 
         # 弾の更新と削除
