@@ -1,5 +1,5 @@
 import pyxel
-
+import random
 from entities.player import Player
 from entities.basic_enemy import BasicEnemy
 from entities.strong_enemy import StrongEnemy
@@ -107,13 +107,18 @@ def update():
                 game_state = STATE_GAME_OVER
                 return
 
-    # BossEnemy の更新
+    # BossEnemy の更新と弾の衝突判定（特殊攻撃含む）
     for enemy in boss_enemies[:]:
         enemy.update()
         for bullet in player.bullets[:]:
             if enemy.is_hit_by(bullet):
                 boss_enemies.remove(enemy)
                 player.bullets.remove(bullet)
+                break
+        for enemy_bullet in enemy.bullets[:]:
+            if player.is_hit_by(enemy_bullet):
+                game_state = STATE_GAME_OVER
+                return
 
     # 敵が全滅したらゲームクリアへ
     if not basic_enemies and not strong_enemies and not boss_enemies:
