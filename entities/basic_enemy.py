@@ -1,7 +1,7 @@
 import pyxel
 import random
 from entities.bullet import Bullet
-from config import SCREEN_WIDTH, ENEMY_WIDTH, ENEMY_HEIGHT, BULLET_WIDTH, BULLET_HEIGHT
+from config import SCREEN_WIDTH, ENEMY_WIDTH, ENEMY_HEIGHT, BULLET_WIDTH
 
 ENEMY_SPEED = 0.5
 DESCENT_AMOUNT = 30
@@ -13,7 +13,7 @@ class BasicEnemy:
         self.y = y
         self.dx = ENEMY_SPEED
         self.bullets = []
-        self.last_shot_frame = pyxel.frame_count + random.randint(0, 60)  # ランダムにずらす
+        self.last_shot_frame = pyxel.frame_count + random.randint(0, 60)  
 
     def update(self):
         self.x += self.dx
@@ -27,7 +27,7 @@ class BasicEnemy:
         if pyxel.frame_count - self.last_shot_frame >= ENEMY_SHOT_INTERVAL:
             bullet_x = self.x + ENEMY_WIDTH // 2 - BULLET_WIDTH // 2
             bullet_y = self.y + ENEMY_HEIGHT
-            self.bullets.append(Bullet(bullet_x, bullet_y, dy=2, color=10))  # 赤い弾など
+            self.bullets.append(Bullet(bullet_x, bullet_y, dy=2, color=10))  
             self.last_shot_frame = pyxel.frame_count
 
         # 弾の更新と削除

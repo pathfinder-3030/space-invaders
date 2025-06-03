@@ -8,7 +8,7 @@ class Bullet:
         self.dy = dy
         self.w = BULLET_WIDTH
         self.h = BULLET_HEIGHT
-        self.color = color  # 弾の色を保持
+        self.color = color  
 
     def update(self):
         self.y += self.dy
