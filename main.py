@@ -4,6 +4,7 @@ from entities.player import Player
 from entities.basic_enemy import BasicEnemy
 from entities.strong_enemy import StrongEnemy
 from entities.boss_enemy import BossEnemy
+from entities.barrier import Barrier  # ← 追加
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT
 
 # ----------------------------
@@ -40,7 +41,7 @@ def init_sounds():
 # 敵・プレイヤーの初期化（再利用可能）
 # ----------------------------
 def reset_game():
-    global player, basic_enemies, strong_enemies, boss_enemies, game_state
+    global player, basic_enemies, strong_enemies, boss_enemies, barriers, game_state
 
     player = Player(SCREEN_WIDTH // 2 - PLAYER_WIDTH // 2, SCREEN_HEIGHT - PLAYER_HEIGHT - 5)
 
@@ -61,6 +62,13 @@ def reset_game():
                 elif row["type"] == BasicEnemy:
                     basic_enemies.append(enemy_instance)
 
+    # ▼ バリア3つを設置
+    barriers = [
+        Barrier(100, SCREEN_HEIGHT - 60),
+        Barrier(SCREEN_WIDTH // 2 - 10, SCREEN_HEIGHT - 60),
+        Barrier(SCREEN_WIDTH - 100, SCREEN_HEIGHT - 60)
+    ]
+
     game_state = STATE_MENU
 
 # ----------------------------
@@ -80,6 +88,12 @@ def update():
         return
 
     player.update()
+
+    # バリアと弾の衝突チェック
+    for barrier in barriers:
+        barrier.update(player.bullets)
+        for enemy in basic_enemies + strong_enemies + boss_enemies:
+            barrier.update(enemy.bullets)
 
     # BasicEnemy の更新と弾の衝突判定
     for enemy in basic_enemies[:]:
@@ -177,6 +191,9 @@ def draw():
         enemy.draw()
     for enemy in boss_enemies:
         enemy.draw()
+
+    for barrier in barriers:
+        barrier.draw()
 
 # ----------------------------
 # 起動処理
