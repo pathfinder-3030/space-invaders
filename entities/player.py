@@ -6,9 +6,9 @@ class Player:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-        self.bullets = []  # 自機の弾リスト
+        self.bullets = []  
         self.direction = "neutral"
-        self.last_shot_frame = -30  # 初期フレームで発射可能にする
+        self.last_shot_frame = -30  
 
     def update(self):
         speed = 2

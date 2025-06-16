@@ -1,7 +1,7 @@
 import pyxel
 import random
 from entities.bullet import Bullet
-from config import SCREEN_WIDTH, BULLET_WIDTH, BULLET_HEIGHT
+from config import SCREEN_WIDTH, BULLET_WIDTH
 
 ENEMY_WIDTH = 12
 ENEMY_HEIGHT = 11

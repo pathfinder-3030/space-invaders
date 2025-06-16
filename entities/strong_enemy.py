@@ -7,7 +7,7 @@ ENEMY_WIDTH = 12
 ENEMY_HEIGHT = 11
 ENEMY_SPEED = 0.5
 DESCENT_AMOUNT = 30
-ENEMY_SHOT_INTERVAL = 120  # 発射間隔（Basicより少し遅めにするなど調整可）
+ENEMY_SHOT_INTERVAL = 120  
 
 class StrongEnemy:
     def __init__(self, x, y):
@@ -27,7 +27,7 @@ class StrongEnemy:
         if pyxel.frame_count - self.last_shot_frame >= ENEMY_SHOT_INTERVAL:
             bullet_x = self.x + ENEMY_WIDTH // 2 - BULLET_WIDTH // 2
             bullet_y = self.y + ENEMY_HEIGHT
-            self.bullets.append(Bullet(bullet_x, bullet_y, dy=2, color=3))  # 色6で区別
+            self.bullets.append(Bullet(bullet_x, bullet_y, dy=2, color=3))  
             self.last_shot_frame = pyxel.frame_count
 
         # 弾の更新・削除

@@ -4,7 +4,7 @@ from entities.player import Player
 from entities.basic_enemy import BasicEnemy
 from entities.strong_enemy import StrongEnemy
 from entities.boss_enemy import BossEnemy
-from entities.barrier import Barrier  # ← 追加
+from entities.barrier import Barrier
 from config import SCREEN_WIDTH, SCREEN_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT
 
 # ----------------------------
