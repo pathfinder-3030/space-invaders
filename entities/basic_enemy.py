@@ -5,7 +5,7 @@ from config import SCREEN_WIDTH, ENEMY_WIDTH, ENEMY_HEIGHT, BULLET_WIDTH
 
 ENEMY_SPEED = 0.5
 DESCENT_AMOUNT = 30
-ENEMY_SHOT_INTERVAL = 90  # 約3秒に1発（30FPSの場合）
+ENEMY_SHOT_INTERVAL = 90  
 
 class BasicEnemy:
     def __init__(self, x, y):
